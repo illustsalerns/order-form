@@ -4,53 +4,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>あいりん堂オリジナルイラストポスター 注文ページ</title>
+    <title>あいりん堂 注文ページ</title>
     <style>
         #pass-screen { position: fixed; inset: 0; background: #2c3e50; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; }
         #main-content { display: none; }
-        body { font-family: sans-serif; background: #f4f7f6; margin: 0; padding-top: 200px; color: #333; }
+        body { font-family: sans-serif; background: #f4f7f6; margin: 0; padding-top: 180px; color: #333; }
         .header-controls { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: white; padding: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
         .page-title { margin: 0 0 5px 0; font-size: 1.4rem; text-align: center; color: #d35400; font-weight: bold; }
         .about-link { text-align: center; margin-bottom: 10px; font-size: 14px; }
         .about-link a { color: #2980b9; text-decoration: none; font-weight: bold; }
-        .control-row { display: flex; align-items: center; flex-wrap: wrap; gap: 15px; max-width: 1200px; margin: 0 auto; }
-        .cart-panel { margin-left: auto; background: #fffcf0; padding: 12px 20px; border-radius: 12px; border: 2px solid #e67e22; display: flex; align-items: center; gap: 12px; }
-        .total-price { font-size: 26px; color: #e67e22; font-weight: bold; min-width: 120px; }
-        .customer-input { padding: 12px; border: 1px solid #ccc; border-radius: 6px; width: 220px; }
-        .btn-request { background: #e67e22; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .btn-clear { background: #95a5a6; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 12px; margin-left: 10px; }
-        .gallery { display: grid; padding: 25px; max-width: 1500px; margin: 0 auto; grid-template-columns: repeat(auto-fill, minmax(225px, 1fr)); gap: 25px; }
-        .item { background: white; padding: 18px; border-radius: 12px; text-align: center; box-shadow: 0 6px 15px rgba(0,0,0,0.05); }
+        .control-row { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; max-width: 1200px; margin: 0 auto; }
+        .cat-group { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+        .cart-panel { margin-left: auto; background: #fffcf0; padding: 10px 15px; border-radius: 12px; border: 2px solid #e67e22; display: flex; align-items: center; gap: 10px; }
+        .total-price { font-size: 24px; color: #e67e22; font-weight: bold; min-width: 110px; }
+        .customer-input { padding: 10px; border: 1px solid #ccc; border-radius: 6px; width: 220px; font-size: 14px; }
+        .btn-request { background: #e67e22; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; }
+        .btn-clear { background: #95a5a6; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; }
+        .gallery { display: grid; padding: 20px; max-width: 1500px; margin: 0 auto; grid-template-columns: repeat(auto-fill, minmax(225px, 1fr)); gap: 20px; }
+        .item { background: white; padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 6px 15px rgba(0,0,0,0.05); }
         .item img { width: 100%; height: 225px; object-fit: contain; background: #fbfbfb; cursor: pointer; border-radius: 8px; }
-        .item-name { margin-top: 12px; font-size: 13px; font-weight: bold; }
-        .price-row { margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 10px; padding-top: 12px; border-top: 1px solid #f0f0f0; }
-        .item-checkbox { width: 24px; height: 24px; cursor: pointer; }
-        .item-price { font-size: 20px; color: #e67e22; font-weight: bold; }
+        .item-name { margin-top: 10px; font-size: 13px; font-weight: bold; }
+        .price-row { margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; padding-top: 10px; border-top: 1px solid #f0f0f0; }
+        .item-checkbox { width: 22px; height: 22px; cursor: pointer; }
+        .item-price { font-size: 18px; color: #e67e22; font-weight: bold; }
         #modal { display: none; position: fixed; z-index: 2000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); cursor: zoom-out; }
         #modal img { max-width: 95%; max-height: 95%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 3px solid white; }
-        .btn { padding: 8px 16px; cursor: pointer; border: 1px solid #ddd; background: white; border-radius: 20px; margin-right: 5px; }
+        .btn { padding: 6px 12px; cursor: pointer; border: 1px solid #ddd; background: white; border-radius: 20px; font-size: 13px; }
         .btn.active { background: #2c3e50; color: white; border-color: #2c3e50; }
-        @media (max-width: 768px) { body { padding-top: 320px; } .cart-panel { width: 100%; flex-direction: column; } .customer-input { width: 100%; } }
+
+        /* --- スマホ用最適化 --- */
+        @media (max-width: 768px) {
+            body { padding-top: 155px; }
+            .header-controls { padding: 8px 10px; }
+            .page-title { font-size: 1.1rem; margin-bottom: 2px; }
+            .about-link { margin-bottom: 5px; font-size: 12px; }
+            .control-row { gap: 5px; }
+            .cat-group { width: 100%; justify-content: flex-start; margin-bottom: 5px; }
+            .cart-panel { width: 100%; margin-left: 0; flex-direction: row; flex-wrap: wrap; padding: 8px; justify-content: space-between; gap: 5px; }
+            .total-price { font-size: 20px; min-width: 80px; order: 1; }
+            .customer-input { width: calc(100% - 100px); font-size: 13px; padding: 6px; order: 2; }
+            .btn-request { width: 70%; padding: 8px; font-size: 13px; order: 3; }
+            .btn-clear { width: 25%; padding: 8px; font-size: 11px; order: 4; }
+            .gallery { padding: 10px; gap: 15px; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+            .item { padding: 10px; }
+            .item img { height: 140px; }
+            .item-name { font-size: 11px; }
+            .item-price { font-size: 16px; }
+        }
     </style>
 </head>
 <body>
 <div id="pass-screen">
-    <h2>あいりん堂 注文サイト</h2>
-    <input type="password" id="pass-input" placeholder="パスワードを入力" style="padding:12px; border-radius:8px; border:none; margin-bottom:15px; text-align:center;">
-    <button onclick="checkPass()" style="padding:10px 30px; border-radius:8px; border:none; background:#e67e22; color:white; font-weight:bold; cursor:pointer;">ログイン</button>
-    <p id="pass-error" style="color:#ff7675; margin-top:10px;"></p>
+    <h3>あいりん堂 ログイン</h3>
+    <input type="password" id="pass-input" placeholder="パスワード" style="padding:10px; border-radius:8px; border:none; margin-bottom:15px; text-align:center;">
+    <button onclick="checkPass()" style="padding:10px 20px; border-radius:8px; border:none; background:#e67e22; color:white; font-weight:bold;">ログイン</button>
+    <p id="pass-error" style="color:#ff7675; margin-top:10px; font-size:12px;"></p>
 </div>
 <div id="main-content">
     <div class="header-controls">
-        <h1 class="page-title">あいりん堂オリジナルイラストポスター 注文ページ</h1>
-        <div class="about-link"><a href="about.html">【必ずお読みください】本ページのご利用ガイドはこちら</a></div>
+        <h1 class="page-title">あいりん堂イラスト注文ページ</h1>
+        <div class="about-link"><a href="about.html">【ご利用ガイドはこちら】</a></div>
         <div class="control-row">
-            <div><strong>絞り込み:</strong><br><button class="btn btn-cat active" onclick="filterCategory('ALL', this)">すべて</button><button class="btn btn-cat active" onclick="filterCategory('A', this)">A</button><button class="btn btn-cat active" onclick="filterCategory('D', this)">D</button><button class="btn btn-cat active" onclick="filterCategory('S', this)">S</button></div>
+            <div class="cat-group">
+                <button class="btn btn-cat active" onclick="filterCategory('ALL', this)">すべて</button><button class="btn btn-cat active" onclick="filterCategory('A', this)">A</button><button class="btn btn-cat active" onclick="filterCategory('D', this)">D</button><button class="btn btn-cat active" onclick="filterCategory('S', this)">S</button>
+            </div>
             <div class="cart-panel">
                 <span class="total-price" id="totalPrice">¥0</span>
-                <input type="email" id="customerEmail" class="customer-input" placeholder="連絡先メールアドレス">
-                <button class="btn-request" id="requestBtn" disabled onclick="handleRequest()">注文を送信</button>
-                <button class="btn-clear" onclick="clearSelection()">選択クリア</button>
+                <input type="email" id="customerEmail" class="customer-input" placeholder="メールアドレス">
+                <button class="btn-request" id="requestBtn" disabled onclick="handleRequest()">注文送信</button>
+                <button class="btn-clear" onclick="clearSelection()">クリア</button>
             </div>
         </div>
     </div>
@@ -4462,10 +4484,9 @@
             document.getElementById('main-content').style.display = 'block';
             const saved = localStorage.getItem('airindo_email');
             if (saved) document.getElementById('customerEmail').value = saved;
-        } else { document.getElementById('pass-error').innerText = "パスワードが正しくありません"; }
+        } else { document.getElementById('pass-error').innerText = "パスワードが違います"; }
     }
     document.getElementById('pass-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') checkPass(); });
-
     let currentCategory = 'ALL';
     function filterCategory(cat, btn) {
         currentCategory = cat;
@@ -4504,16 +4525,16 @@
             selected.push("・" + item.getAttribute('data-name') + " (¥" + parseInt(item.getAttribute('data-price')).toLocaleString() + ")");
             total += parseInt(item.getAttribute('data-price'));
         });
-        if (!confirm("注文リクエストを送りますか？")) return;
+        if (!confirm("注文を送信しますか？")) return;
         const btn = document.getElementById('requestBtn');
         btn.disabled = true; btn.innerText = "送信中...";
         try {
-            await fetch("https://script.google.com/macros/s/AKfycbwr3BuUeRyCPVLt8JMccJhkszkyR1oslnUOD3q1dfHrBMt5sxMS_LwMmJqYQmlVw3d1/exec", { method: 'POST', body: JSON.stringify({ email: email, message: "【購入リクエスト】\n" + selected.join("\n") + "\n\n合計：" + total.toLocaleString() + "円" }) });
+            await fetch("https://script.google.com/macros/s/AKfycbwr3BuUeRyCPVLt8JMccJhkszkyR1oslnUOD3q1dfHrBMt5sxMS_LwMmJqYQmlVw3d1/exec", { method: 'POST', body: JSON.stringify({ email: email, message: "【注文】\n" + selected.join("\n") + "\n\n合計：" + total.toLocaleString() + "円" }) });
             alert("送信完了しました！");
             document.querySelectorAll('.item-checkbox').forEach(cb => cb.checked = false);
             updateTotal();
         } catch (err) { alert("送信に失敗しました。"); }
-        finally { btn.disabled = false; btn.innerText = "注文を送信"; }
+        finally { btn.disabled = false; btn.innerText = "注文送信"; }
     }
 </script>
 </body>
