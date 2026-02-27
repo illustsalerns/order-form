@@ -6,6 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="robots" content="noindex, nofollow">
     <title>注文ページ - あいりん堂</title>
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6DGZNSPKDE"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-6DGZNSPKDE');
+    </script>
+    
     <style>
         #pass-screen { position: fixed; inset: 0; background: #2c3e50; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; }
         #main-content { display: none; }
@@ -5410,7 +5419,6 @@
             document.getElementById('main-content').style.display = 'block';
             const saved = localStorage.getItem('airindo_email');
             if (saved) document.getElementById('customerEmail').value = saved;
-            // 初期表示カテゴリを適用
             applyFilters();
         }
     }
@@ -5421,16 +5429,13 @@
         const gallery = document.getElementById('gallery');
         const items = Array.from(gallery.querySelectorAll('.item'));
         const btn = document.getElementById('sortBtn');
-        
         isDesc = !isDesc;
         btn.innerText = isDesc ? "降順 ▼" : "昇順 ▲";
-
         items.sort((a, b) => {
             const nameA = a.getAttribute('data-name');
             const nameB = b.getAttribute('data-name');
             return isDesc ? nameB.localeCompare(nameA) : nameA.localeCompare(nameB);
         });
-        
         gallery.innerHTML = '';
         items.forEach(item => gallery.appendChild(item));
         applyFilters();
@@ -5475,6 +5480,16 @@
             total += parseInt(item.getAttribute('data-price'));
         });
         if (!confirm("注文を送信しますか？")) return;
+        
+        // 【追加】Googleアナリティクスにイベント送信
+        if (typeof gtag === 'function') {
+            gtag('event', 'purchase_request', {
+                'event_category': 'order',
+                'event_label': email,
+                'value': total
+            });
+        }
+
         try {
             await fetch("https://script.google.com/macros/s/AKfycbwr3BuUeRyCPVLt8JMccJhkszkyR1oslnUOD3q1dfHrBMt5sxMS_LwMmJqYQmlVw3d1/exec", { method: 'POST', body: JSON.stringify({ email: email, message: "【注文】\n" + selected.join("\n") + "\n\n合計：" + total.toLocaleString() + "円" }) });
             alert("送信完了！");
